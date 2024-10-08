@@ -2,9 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Test.Application.DI;
+using Test.Cross.Kafka.Di;
 using Test.Domain.DI;
 using Test.Infra;
 using Test.Infra.DI;
+using Test.Cross.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddDbContext<BackendeTestContext>(options =>
         options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.RegisterKafka(builder.Configuration.GetMessageQueueConnection("KafkaConnection"));
 
 var app = builder.Build();
 
